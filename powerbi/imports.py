@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Union
+from typing import Any, Union
 from typing import Dict
 from powerbi.session import PowerBiSession
 
@@ -45,7 +45,8 @@ class Imports():
 
         content = self.power_bi_session.make_request(
             method='post',
-            endpoint='myorg/imports/createTemporaryUploadLocation'
+            endpoint='myorg/imports/createTemporaryUploadLocation',
+            mode='json'
         )
 
         return content
@@ -80,7 +81,8 @@ class Imports():
 
         content = self.power_bi_session.make_request(
             method='post',
-            endpoint=f'/myorg/groups/{group_id}/imports/createTemporaryUploadLocation'
+            endpoint=f'/myorg/groups/{group_id}/imports/createTemporaryUploadLocation',
+            mode='json'
         )
 
         return content
@@ -100,7 +102,8 @@ class Imports():
 
         content = self.power_bi_session.make_request(
             method='get',
-            endpoint=f'/myorg/imports'
+            endpoint=f'/myorg/imports',
+            mode='json'
         )
 
         return content
@@ -127,7 +130,8 @@ class Imports():
 
         content = self.power_bi_session.make_request(
             method='get',
-            endpoint=f'/myorg/groups/{group_id}/imports'
+            endpoint=f'/myorg/groups/{group_id}/imports',
+            mode='json'
         )
 
         return content
@@ -154,7 +158,8 @@ class Imports():
 
         content = self.power_bi_session.make_request(
             method='get',
-            endpoint=f'/myorg/imports/{import_id}'
+            endpoint=f'/myorg/imports/{import_id}',
+            mode='json'
         )
 
         return content
@@ -185,8 +190,44 @@ class Imports():
 
         content = self.power_bi_session.make_request(
             method='get',
-            endpoint=f'/myorg/groups/{group_id}/imports/{import_id}'
+            endpoint=f'/myorg/groups/{group_id}/imports/{import_id}',
+            mode='json'
         )
 
         return content
 
+    def post_group_import(self, group_id: str, datasetDisplayName: str, file: Any) -> Dict:
+        """Post the specified import to the specified workspace.
+
+        ### Parameters
+        ----
+        group_id : str
+            The workspace ID.
+
+        datasetDisplayName : str
+            The name of dataset which you want to import.
+
+        file : Any
+            The path to the file which you want import
+
+        ### Returns
+        ----
+            A `Imported` importID resource.
+
+        ### Usage
+        ----
+            >>> imports_service = power_bi_client.imports()
+            >>> imports_service.post_group_import(
+                group_id='f78705a2-bead-4a5c-ba57-166794b05c78',
+                datasetDisplayName='your_dataset_name', 
+                file)
+            )
+        """
+        content = self.power_bi_session.make_request(
+            method='post',
+            endpoint=f'/myorg/groups/{group_id}/imports/?datasetDisplayName={datasetDisplayName}',
+            data=file,
+            mode='file'
+        )
+
+        return content

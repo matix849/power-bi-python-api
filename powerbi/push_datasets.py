@@ -51,6 +51,7 @@ class PushDatasets():
         content = self.power_bi_session.make_request(
             method='get',
             endpoint=f'myorg/datasets/{dataset_id}/tables',
+            mode='json'
         )
 
         return content
@@ -84,6 +85,7 @@ class PushDatasets():
         content = self.power_bi_session.make_request(
             method='get',
             endpoint=f'myorg/groups/{group_id}/datasets/{dataset_id}/tables',
+            mode='json'
         )
 
         return content
@@ -124,7 +126,8 @@ class PushDatasets():
         content = self.power_bi_session.make_request(
             method='post',
             endpoint=f'myorg/datasets?defaultRetentionPolicy={default_retention_policy}',
-            data=dataset
+            data=dataset,
+            mode='json'
         )
 
         return content
@@ -169,7 +172,8 @@ class PushDatasets():
         content = self.power_bi_session.make_request(
             method='post',
             endpoint=f'myorg/groups/{group_id}/datasets?defaultRetentionPolicy={default_retention_policy}',
-            data=dataset
+            data=dataset,
+            mode='json'
         )
 
         return content
@@ -216,7 +220,8 @@ class PushDatasets():
         content = self.power_bi_session.make_request(
             method='post',
             endpoint=f'myorg/datasets/{dataset_id}/tables/{table_name}/rows',
-            json_payload=rows
+            json_payload=rows,
+            mode='json'
         )
 
         return content
@@ -267,7 +272,8 @@ class PushDatasets():
         content = self.power_bi_session.make_request(
             method='post',
             endpoint=f'myorg/groups/{group_id}/datasets/{dataset_id}/tables/{table_name}/rows',
-            json_payload=rows
+            json_payload=rows,
+            mode='json'
         )
 
         return content
@@ -316,7 +322,8 @@ class PushDatasets():
         content = self.power_bi_session.make_request(
             method='put',
             endpoint=f'myorg/datasets/{dataset_id}/tables/{table_name}',
-            data=table
+            data=table,
+            mode='json'
         )
 
         return content
@@ -369,7 +376,8 @@ class PushDatasets():
         content = self.power_bi_session.make_request(
             method='put',
             endpoint=f'myorg/groups/{group_id}/datasets/{dataset_id}/tables/{table_name}',
-            data=table
+            data=table,
+            mode='json'
         )
 
         return content
@@ -398,7 +406,8 @@ class PushDatasets():
 
         content = self.power_bi_session.make_request(
             method='delete',
-            endpoint=f'myorg/datasets/{dataset_id}/tables/{table_name}/rows'
+            endpoint=f'myorg/datasets/{dataset_id}/tables/{table_name}/rows',
+            mode='json'
         )
 
         return content
@@ -431,7 +440,53 @@ class PushDatasets():
 
         content = self.power_bi_session.make_request(
             method='delete',
-            endpoint=f'myorg/groups/{group_id}/datasets/{dataset_id}/tables/{table_name}/rows'
+            endpoint=f'myorg/groups/{group_id}/datasets/{dataset_id}/tables/{table_name}/rows',
+            mode='json'
+        )
+
+        return content
+
+    def update_group_parameters(self, group_id: str, dataset_id: str, new_parameters: list) -> None:
+        """Adds new data rows to the specified table, within the specified dataset, 
+        from the specified workspace.
+
+        ### Parameters
+        ----
+        group_id : str
+            The workspace id.
+
+        dataset_id : str
+            The dataset id
+
+        new_parameters : list
+            New parameters for dataset.
+
+        ### Usage
+        ----
+            >>> push_datasets_service = power_bi_client.push_datasets()
+            >>> push_datasets_service.update_group_parameters(
+                group_id='f78705a2-bead-4a5c-ba57-166794b05c78',
+                dataset_id='8ea21119-fb8f-4592-b2b8-141b824a2b7e',
+                new_parameters={
+                                "updateDetails": [
+                                    {
+                                    "name": "DatabaseName",
+                                    "newValue": "NewDB"
+                                    },
+                                    {
+                                    "name": "MaxId",
+                                    "newValue": "5678"
+                                    }
+                                ]
+                            }
+            )
+        """
+
+        content = self.power_bi_session.make_request(
+            method='post',
+            endpoint=f'myorg/groups/{group_id}/datasets/{dataset_id}/Default.UpdateParameters',
+            json_payload=new_parameters,
+            mode='json'
         )
 
         return content

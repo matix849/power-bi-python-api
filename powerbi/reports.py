@@ -132,6 +132,7 @@ class Reports():
         content = self.power_bi_session.make_request(
             method='get',
             endpoint=f'myorg/groups/{group_id}/reports/{report_id}',
+            mode='json'
         )
 
         return content

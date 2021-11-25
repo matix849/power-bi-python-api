@@ -48,7 +48,7 @@ class PowerBiSession():
             format=log_format
         )
 
-    def build_headers(self) -> Dict:
+    def build_headers(self, mode: str = None) -> Dict:
         """Used to build the headers needed to make the request.
 
         ### Parameters
@@ -61,12 +61,17 @@ class PowerBiSession():
         Dict:
             A dictionary containing all the components.
         """
-
+        if mode == 'file':
         # Fake the headers.
-        headers = {
-            "Authorization": "Bearer {access_token}".format(access_token=self.client.access_token),
-            "Content-Type": "application/json"
-        }
+            headers = {
+                "Authorization": "Bearer {access_token}".format(access_token=self.client.access_token),
+                "Content-Type": "multipart/form-data"
+            }
+        else:
+            headers = {
+                "Authorization": "Bearer {access_token}".format(access_token=self.client.access_token),
+                "Content-Type": "application/json"
+            }
 
         return headers
 
@@ -96,6 +101,7 @@ class PowerBiSession():
         self,
         method: str,
         endpoint: str,
+        mode: str = None,
         params: dict = {},
         data: dict = {},
         json_payload: dict = {}
@@ -141,7 +147,7 @@ class PowerBiSession():
         url = self.build_url(endpoint=endpoint)
 
         # Define the headers.
-        headers = self.build_headers()
+        headers = self.build_headers(mode=mode)
 
         logging.info(
             "URL: {url}".format(url=url)
